@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Target : MonoBehaviour
 {
     private const float minForce = 10;
@@ -13,11 +14,11 @@ public class Target : MonoBehaviour
     private const float ySpawnPos = -2;
 
     private Rigidbody targetRB;
-    private GameManager gameManager;
 
     public int pointValue;
 
     public ParticleSystem expParticle;
+    private GameManager gameManager;
     void Start()
     {
         targetRB = GetComponent<Rigidbody>();
@@ -47,13 +48,20 @@ public class Target : MonoBehaviour
 
     private void OnMouseDown()
     {
-        gameManager.UpdateScore(pointValue);
-        Instantiate(expParticle, transform.position, expParticle.transform.rotation);
-        Destroy(gameObject);
+        if(gameManager.gameActive)
+        {
+            gameManager.UpdateScore(pointValue);
+            Instantiate(expParticle, transform.position, expParticle.transform.rotation);
+            Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
+        if(gameObject.CompareTag("Hazard"))
+        {
+            gameManager.GameOver();
+        }
     }
 }
